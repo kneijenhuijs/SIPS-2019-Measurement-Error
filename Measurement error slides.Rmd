@@ -107,4 +107,3 @@ We aggregate between participants (to eliminate systematic measurement error)
 
 ## Simulation time
 
-Sim
