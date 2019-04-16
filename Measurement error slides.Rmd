@@ -1,0 +1,106 @@
+---
+title: "Measurement error in psychological science"
+author: "Koen Neijenhuijs & Sam Parsons"
+date: "July .., 2019"
+output: 
+  ioslides_presentation:
+    logo: Pictures/logo2.png
+    transition: faster
+---
+
+## Who we are
+<div class="columns-2">
+![](Pictures/Koen2.jpg)
+
+Koen Neijenhuijs
+
+@KNeijenhuijs
+
+k.i.neijenhuijs@vu.nl
+</div>
+
+## Measurement Error {.build}
+Always there
+
+Always watching
+
+<div class="centered">
+![](gifs/underestimate.gif)
+</div>
+
+## What is Measurement Error? {.flexbox .vcenter}
+
+**Observational error** (or **measurement error**) is the difference between a measured value of a quantity and its true value.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+library(ggplot2)
+library(ggthemes)
+
+datPlot <- data.frame(Person = c(1, 1, 2, 2), 
+                    Value = as.factor(rep(c("Measured", "True"), times=2)),
+                    y = c(20, 30, 25, 10))
+
+ggplot(datPlot) + 
+  geom_point(aes(x=Person, y=y, color=Value)) + 
+  scale_y_continuous(limits=c(0,50)) +
+  geom_segment(aes(x=1, xend=1, y=21, yend=29), color="gray55", arrow=arrow()) +
+  annotate("text", x=1.2, y=25, label="+10", color="gray55") +
+  geom_segment(aes(x=2, xend=2, y=24, yend=11), color="gray55", arrow=arrow()) +
+  annotate("text", x=1.8, y=17.5, label="-15", color="gray55") +
+  scale_x_continuous(limits=c(0,3), breaks=c(1,2), labels=c("Person 1", "Person 2")) +
+  theme_few()
+```
+
+## What is Measurement Error?
+Systematic measurement error: inaccuracies inherent to the measurement tool
+
+*E.g. Miscalibrated computer for reaction time*
+
+Random measurement error: Unpredictable fluctuations in measurement
+
+*E.g. During reaction time measurement, a participant may be distracted on some trials*
+
+## Determining Measurement Error?
+We don't know the true value, so can't calculate...
+
+Can estimate the minimum value change that is not measurement error: Smallest Detectable Change
+
+## Smallest Detectable Change {.build}
+
+$$Reliability = {\sigma^2 participants \over \sigma² participants + \sigma² error}$$
+
+$$Standard\, Error\, of\, Measurement = \sqrt {\sigma² error}$$
+
+$$Standard\, Error\, of\, Measurement = SD * \sqrt {1-ICC}$$
+
+$$Smallest\, Detectable\, Change = 1.96 * \sqrt {2} * SEM$$
+
+$$Smallest\, Detectable\, Change = 1.96 * SD_{change}$$
+
+## Smallest Detectable Change {.build}
+$$Smallest\, Detectable\, Change = 1.96 * \sqrt {2} * SEM$$
+
+$$Smallest\, Detectable\, Change = 1.96 * SD_{change}$$
+
+SDC is the smallest change in score that you can detect above the measurement error
+
+Note that we are using a z-distribution (1.96):
+
+5% of cases where we judge the change score above the measurement error, this is a type I error...
+
+<div class="centered">
+![](gifs\fozzie.gif)
+</div>
+
+## How we currently deal with measurement error
+We aggregate within participants (to eliminate random measurement error)
+
+*E.g. The different levels of distraction of a participant should even out across trials*
+
+We aggregate between participants (to eliminate systematic measurement error)
+
+*E.g. Participants that don't take the measurement seriously, should be evened out by participants who do*
+
+## Problem solved then?! {.flexbox .vcenter}
+
+![](Pictures/yesbutno.jpg)
