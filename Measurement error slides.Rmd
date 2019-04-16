@@ -106,3 +106,5 @@ We aggregate between participants (to eliminate systematic measurement error)
 ![](Pictures/yesbutno.jpg)
 
 ## Simulation time
+
+Sim
