@@ -104,3 +104,5 @@ We aggregate between participants (to eliminate systematic measurement error)
 ## Problem solved then?! {.flexbox .vcenter}
 
 ![](Pictures/yesbutno.jpg)
+
+## Simulation time
