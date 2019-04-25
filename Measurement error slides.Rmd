@@ -92,6 +92,9 @@ Note that we are using a z-distribution (1.96):
 ![](gifs\fozzie.gif)
 </div>
 
+## SDC and reliability
+"Reliability is "the degree to which the measurement is free from measurement error" [@Mokkink2010a]
+
 ## How we currently deal with measurement error
 We aggregate within participants (to eliminate random measurement error)
 
@@ -106,4 +109,5 @@ We aggregate between participants (to eliminate systematic measurement error)
 ![](Pictures/yesbutno.jpg)
 
 ## Simulation time
+
 
