@@ -6,6 +6,7 @@ output:
   ioslides_presentation:
     logo: Pictures/logo2.png
     transition: faster
+bibliography: EM.bib
 ---
 
 ## Who we are
@@ -14,7 +15,7 @@ output:
 
 Koen Neijenhuijs
 
-@KNeijenhuijs
+\@KNeijenhuijs
 
 k.i.neijenhuijs@vu.nl
 </div>
@@ -199,3 +200,7 @@ Random measurement error: Unpredictable fluctuations in measurement
 
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 </font>
+
+## References
+
+<font size="3">
