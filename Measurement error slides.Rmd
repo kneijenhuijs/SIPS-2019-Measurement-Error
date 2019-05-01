@@ -93,7 +93,44 @@ Note that we are using a z-distribution (1.96):
 </div>
 
 ## SDC and reliability
+SDC can be calculated from ICC
+
 "Reliability is "the degree to which the measurement is free from measurement error" [@Mokkink2010a]
+
+## Limits of Agreement
+SDC is not the only value of measurement error
+
+Limits of Agreement show... well, the limits of agreement between two measures
+
+Often used to compare two sets of measurements from two instruments, but can also be used for two sets of measurements from the same instrument
+
+Bland-Altman method:
+
+$$Limits\, of\, Agreement = Mean_{difference} \pm 1.96 * SD_{difference}$$
+
+Limits of Agreement is a Confidence Interval in disguise
+
+## Bland-Altman plot
+The plot below is of two measurements with a *Mean* of **20**, and *sd*'s of **2.5** and **10**
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
+library(ggplot2)
+library(dplyr)
+library(ggthemes)
+
+datPlot <- data.frame(Measurement1 = rnorm(40, 20, 2.5),
+                      Measurement2 = rnorm(40, 20, 10)) %>% rowwise() %>%
+  mutate(Avg = mean(c(Measurement1, Measurement2)), Dif=Measurement1-Measurement2)
+
+ggplot(datPlot, aes(x=Avg, y=Dif)) + 
+  geom_point(alpha=0.7) +
+  geom_hline(yintercept = mean(datPlot$Dif), colour = "blue", size = 0.5) +
+  geom_hline(yintercept = mean(datPlot$Dif) - (1.96 * sd(datPlot$Dif)), colour = "red", size = 0.5) +
+  geom_hline(yintercept = mean(datPlot$Dif) + (1.96 * sd(datPlot$Dif)), colour = "red", size = 0.5) +
+  ylab("Diff. Between Measures") +
+  xlab("Average Measure") +
+  theme_few()
+```
 
 ## How we currently deal with measurement error
 We aggregate within participants (to eliminate random measurement error)
@@ -110,4 +147,29 @@ We aggregate between participants (to eliminate systematic measurement error)
 
 ## Simulation time
 
+## That's enough of us talking
 
+The rest of all slides are of questions and statements for the room to discuss
+
+For some of them we have prepared some answers we could think of
+
+
+##Is measurement error prevalent in your studies?
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<font size="3">
+Systematic measurement error: inaccuracies inherent to the measurement tool
+
+*E.g. Miscalibrated computer for reaction time*
+
+Random measurement error: Unpredictable fluctuations in measurement
+
+*E.g. During reaction time measurement, a participant may be distracted on some trials*
+</font>
+
+## What about mixed-effect models?
