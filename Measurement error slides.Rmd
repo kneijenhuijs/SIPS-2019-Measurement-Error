@@ -146,6 +146,16 @@ We aggregate between participants (to eliminate systematic measurement error)
 ![](Pictures/yesbutno.jpg)
 
 ## Simulation time
+## We all love simulations, amirite?
+
+*Will insert simulation results when they're done*
+
+*Simulations will be on the effect of measurement error on effect sizes*
+
+<div class="centered">
+![](Pictures/construct.png)
+</div>
+
 
 ## That's enough of us talking
 
@@ -153,9 +163,9 @@ The rest of all slides are of questions and statements for the room to discuss
 
 For some of them we have prepared some answers we could think of
 
+## Is measurement error prevalent in your studies?
 
-##Is measurement error prevalent in your studies?
-
+<br>
 <br>
 <br>
 <br>
@@ -173,3 +183,19 @@ Random measurement error: Unpredictable fluctuations in measurement
 </font>
 
 ## What about mixed-effect models?
+
+Mixed-effect models can:
+
+- Model the **random variance** inherent to participants across multiple measures
+- Model the **random variance** inherent to stimuli across multiple measures
+- Model the **random variance** inherent to *pretty much anything* across multiple measures
+
+<font size="3">
+Systematic measurement error: inaccuracies inherent to the measurement tool
+
+*E.g. Miscalibrated computer for reaction time*
+
+Random measurement error: Unpredictable fluctuations in measurement
+
+*E.g. During reaction time measurement, a participant may be distracted on some trials*
+</font>
