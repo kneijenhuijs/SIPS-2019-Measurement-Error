@@ -148,9 +148,34 @@ We aggregate between participants (to eliminate systematic measurement error)
 
 ## We all love simulations, amirite?
 
-*Will insert simulation results when they're done*
+Simulation based on a RCT for treatment of depression, measured by the BDI-II.
 
-*Simulations will be on the effect of measurement error on effect sizes*
+BDI-II has range of 0 - 63. Pooled baseline means and sd's of clinical samples from systematic review [@Wang2013]: Baseline mean = 24.1, baseline sd = 11.4
+
+Assume a score decrease of 15.7% for untreated depression [@Posternak2001], which translates to a mean decrease of 9.828. The SD was arbitrarily set to 40% of this decrease to 3.9312.
+
+## Simulation continued
+
+The treatment group received further decrease, based on the MCID of the BDI-II, which was determined to be 18% [@Button2015], leading to a MCID of 4.338.
+
+Measurement error was added based on a percentage of the range of the BDI-II.
+
+## Simulation parameters
+
+Sample size: 250 / 500 / 750
+
+Effect size: 0 / 2\*MCID / 4\*MCID / 6*MCID
+
+Measurement error: 0 / 10% / 20% / 30% / 40%
+
+x replications
+
+Simulations performed using SimDesign package [@SimDesign].
+
+Code can be found on my Github: URL here.
+
+## Simulation results
+*Will insert simulation results when they're done*
 
 <div class="centered">
 ![](Pictures/construct.png)
