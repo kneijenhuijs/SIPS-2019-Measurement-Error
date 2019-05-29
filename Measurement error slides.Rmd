@@ -146,7 +146,6 @@ We aggregate between participants (to eliminate systematic measurement error)
 
 ![](Pictures/yesbutno.jpg)
 
-## Simulation time
 ## We all love simulations, amirite?
 
 *Will insert simulation results when they're done*
@@ -163,6 +162,8 @@ We aggregate between participants (to eliminate systematic measurement error)
 The rest of all slides are of questions and statements for the room to discuss
 
 For some of them we have prepared some answers we could think of
+
+but first, let's take some time for an open discussion
 
 ## Is measurement error prevalent in your studies?
 
@@ -200,6 +201,13 @@ Random measurement error: Unpredictable fluctuations in measurement
 
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 </font>
+
+## Ideas for questions and statements
+
+- How to measure measurement error in experimental psychology?
+- Would it be feasible to set up studies to investigate the measurement error of your measurement tools in your field?
+- Are the limitations to how we investigate measurement error (SDC & LoA) detrimental to our understanding?
+- How can we incorporate measurement error into our data-analyses?
 
 ## References
 
