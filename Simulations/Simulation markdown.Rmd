@@ -1,0 +1,162 @@
+This file will be used to create a GitHub page once the repository goes public.
+
+This page introduces the reasoning behind the unconference on Measurement Error during the meeting of the Society for the Improvement of Psychological Science 2019 in Rotterdam.
+
+Recently, I performed a systematic review on the measurement properties of a few dozen Patient Reported Outcome Measures (PROMs). After data extraction of 314 validation articles, we found a surprising lack of reports on measurement error. A total of 13 validation articles (4.14%) reported on measurement error, of which 9 reported a Standard Error of Measurement, 3 reported Limits of Agreement, and 2 reported Person Standard Error. For a total of 12 validation articles (3.82%) we could calculate Standard Error of Measurement and Smallest Detectable Change. As such, only 25 (7.96%) of all articles reported data relevant to Measurement Error.
+
+Measurement Error represents the minimum amount of change measured by a measurement tool, of which we can be sure is not an artifact of systematic error. The amount of Measurement Error is ideally smaller than the Minimal Clinically Important Difference, which represents the minimum amount of change measured by a measurement tool, which is judged to be represent a clinically meaningful change for the patient. We want the Measurement Error to be smaller, so that we can be sure that when we measure a clinically meaningful change, it is not an error.
+
+Given the above definition, it is clear that Measurement Error has large implications for both clinical practice (e.g. “did the patient improve / deteriorate over time?”) as well as research settings (e.g. “is the change caused by our intervention large enough to warrant implementation?”). To illustrate the latter, I drafted a simulation to represent a research setting close to my own field.
+
+# Simulation justification
+I am simulation a RCT for the treatment of depression, with depression being measured by the BDI-II. Why the BDI-II? Because I could find some nifty statistics on it to make the simulation more rooted in reality.
+
+The BDI-II has a range of 0 - 63, which can be categorized into four categories:
+    
+1. 0-13: minimal depression
+2. 14-19: mild depression
+3. 20-28: moderate depression
+4. 29-63: severe depression
+
+A systematic review from 2013 provided me with data on baseline means and standard deviations of clinical samples [@Wang2013]. I pooled these means and standard deviations, which resulted in a pooled baseline mean of 24.1 and pooled baseline sd of 11.4. These numbers will be used to represent our fixed intercept in the data generation.
+
+A meta-analysis found that the score on the BDI-II decreased by 15.7% for untreated depression groups [@Posternak2001], which translates to a mean decrease of 9.828. This decreases will represent our fixed slope across time.
+
+We are assuming that our treatment group has a further decrease in depression. Because the MCID is related to measurement error, and because it has been studied in the BDI-II, I am using the MCID as an 'effect size'. The MCID of the BDI-II is 18% [@Button2015], leading to a MCID of 4.338. We're going to use multipled of the MCID as a parameter in the data generation. Because the group has already decreased to 24.1 - 9.828 = `r 24.1 - 9.828`, we can test out effect sizes up to 3 times the MCID, after which the score on the BDI-II would be very close to zero.
+
+Measurement error was added based on a percentage of the range of the BDI-II. In my experience (and that of some colleague psychometricians I asked, #AnecdotalEvidence) a Smallest Detectable Change representing 20% of the range of the measurement instrument is a regular finding. As such, I decided to use measurement error ranging from 0% up to 40%.
+
+# Code explanation
+I'm going to walk through the code step by step. I am using the SimDesign package [@SimDesign] to simplify the steps. The steps consist of data generation, data analysis, and summarizing the results.
+
+## Data generation
+The first step is defining the design:
+
+```{r eval=FALSE}
+Design <- expand.grid(sampleSize = c(250, 500, 750),
+                      effectSize = c(0*4.338, 1*4.338, 2*4.338, 3*4.338),
+                      measError = c(0, 0.1, 0.2, 0.3, 0.4))
+```
+
+These are the parameters I discussed previously. The effect size is based on a multiplication of the MCID (4.338), while the measurement error is based on a percentage of the range. Furthermore, I wanted to check the influence of sample size. I actually also wanted to include small sample sizes (< 100), but I couldn't get the models based on that data generation to converge in the analysis phase.
+
+![](gifs/shrug.gif)
+
+I'm going to go step by step through the data generation function.
+
+```{r eval=FALSE}
+# Function that generates the data
+Generate <- function(condition, fixed_objects=NULL) {
+  Attach(condition) # So I don't have to type "condition$" in front of every element in our design
+  # Generate measurement error as percentage of total possible value of BDI-II. Example: if Measurement Error = 0.1 (10% of range), the mean of the measurement error distribution is 0.1*63=6.3.
+  r <- 0.5 # Intra-individual correlation of measurement error
+  Sigma <- matrix(c((3.214286)^2, r, r, (3.214286)^2),nrow=2) # Covariance matrix
+  measurementError <- rmvnorm(sampleSize, mean=c(measError*63,measError*63), sigma=Sigma)
+  measSign <- rbinom(sampleSize, 1, prob=c(0.5,0.5)) # random binomial to make measurement error randomly positively or negatively signed
+  measSign[measSign==0] <- -1 # Change zero to -1 for sign
+  measurementError <- measurementError * measSign # Apply sign
+  measurementErrorDat <- data.frame(id = sort(rep(c(1:sampleSize))),
+                                    Pre = measurementError[,1],
+                                    Post = measurementError[,2]) %>% gather("time", "measurementError", -id)
+```
+
+Above, I generate the measurement error and put it into a data frame. I'm going to have to explain the Sigma, and my justifications. To be honest, this is where I couldn't find strong justifications for settings. I picked an intra-individual correlation of measurement error (the correlation between the measurement error at baseline and endline) of 0.5. Honestly, this could be anything. Next, the number 3.214286 might seem very random. I actually chose to take 10% of the BDI-II range (6.3) to represent 1.96*sd. This low number was chosen to create a conservative variance of measurement error. Basically, this ensures that the data generation doesn't create large deviations from the set measurement error mean. These parameters are super arbitrary, and I haven't checked how much they influence the results.
+
+```{r eval=FALSE}
+  # Random effects
+  i <- 0.2 # sd intercepts
+  s <- 0.5 # sd slopes
+  r <- 0.8 # correlation between intercepts and slopes
+  
+  # This calculates the random effects
+  cov.matrix1 <- matrix(c(i^2, r * i * s, r * i * s, s^2), nrow = 2, byrow = T)
+  randomEffects <- rmvnorm(sampleSize, mean = c(0, 0), sigma = cov.matrix1)
+```
+
+Next, we generate the random intercept and random slope for each individual in our data set. Again, these parameters for Sigma are super-arbitrary. But through experimentation in the past, I found these parameters to create decent random effects.
+
+```{r eval=FALSE}
+  # Alpha = 24.1 + random intercept
+  # Beta = 9.828 (+ time effect for treatment group) + random slope
+  indDf <- data.frame(id = c(1:sampleSize), 
+                      condition=c(rep('Treatment', sampleSize/2), rep('Control', sampleSize/2))) %>% 
+    mutate(alpha = 24.1+randomEffects[, 1],
+           beta = ifelse(condition=="Treatment", -(9.828+effectSize+randomEffects[, 2]), -(9.828+randomEffects[, 2])))
+
+```
+
+Then I create a data frame with the intercept and slope for each individual in the data set. The intercept is the fixed intercept (24.1) plus the random intercept of each individual. The slope is the fixed slope plus the random slope of each individual. Depending on the condition, the fixed slope is either -9.828 (Control) or -(9.828+effectSize).
+
+```{r eval=FALSE}
+  timeContrast = c(0,1)
+  withinDf <-  data.frame(id = sort(rep(c(1:sampleSize), 2)), 
+                          time=c(rep(c('Pre', 'Post'), sampleSize)), 
+                          x=rep(timeContrast, 2))
+  
+  dat <- merge(indDf, withinDf) %>% merge(measurementErrorDat) %>% mutate(DV = alpha + x * beta + measurementError)
+```  
+
+I create a data frame representing the two measurements, merge it with the data frame with the individual intercepts and slopes, and then calculate the dependent variable as: `intercept + time * slope + measurement error`.
+
+```{r eval=FALSE}
+  # Truncate to 0 or 63
+  dat$DV[dat$DV<0] <- 0
+  dat$DV[dat$DV>63] <- 63
+
+  dat
+}
+```
+
+Lastly, I truncate any values that went below 0 or above 63 (even though scores above 63 should be nigh impossible, best be sure). The function then returns the generated data frame.
+
+## Data analysis
+
+```{r eval=FALSE}
+# Function for analysing the data set
+Analyse <- function(condition, dat, fixed_objects=NULL){
+  Attach(condition) # So I don't have to type "condition$" in front of every element in our design
+  fit <- lmer(DV ~ condition * time + (1 | id), data=dat) # Model fit
+  singular <- isSingular(fit) # Check to see whether the fit is singular
+  sig <- Anova(fit) # Significance test
+  anova <- ezANOVA(dat, dv=.(DV), wid=.(id), within=.(time), between=.(condition)) # RM ANOVA to calculate eta squared
+  ret <- data.frame(coefficientInt=coef(summary(fit))[4,1], seInt=coef(summary(fit))[4,2], pInt=sig$`Pr(>Chisq)`[3], etaInt=anova$ANOVA$ges[3],
+                    singular=as.numeric(singular), effect_Size=as.numeric(effectSize)) # Extract Coefficients, standard errors, significance, and eta squared
+  ret
+}
+```
+
+The data analysis function is much simplet. I fit a linear mixed-effect model, check whether the fit is singular (happens sometimes, and I'd rather have the information on how often it happened), run a significance test, and run a RM ANOVA to get an ETA². Next, all relevant information (coefficient, SE, p-value, ETA² and singularity) is put into a data frame, which the function returns. I also catch the effect size here, as I need it in my summarise function.
+
+## Summarise
+
+```{r eval=FALSE}
+# Function that summarises the analysis results into useful statistics for examining which of the data sets showed less bias
+Summarise <- function(condition, results, fixed_objects = NULL) {
+  bias_Int <- bias(results$coefficientInt, parameter=results$effect_Size, type="relative") # Relative bias summary statistic for the Interaction coefficient
+  MAE_Int <- MAE(results$coefficientInt, parameter=results$effect_Size) # Mean absolute error for the Interaction coefficient
+  RMSE_Int <- RMSE (results$coefficientInt, parameter=results$effect_Size) # Root Mean Square Error for the Interaction coefficient
+  SE_Int <- mean(results$seInt, na.rm=TRUE) # Mean Standard Error of Interaction
+  EDR_Int <- EDR(results$pInt, alpha=.05) # Type I errors and Power for Interaction
+  ETA_Int <- mean(results$etaInt, na.rm=TRUE) # Mean Eta²
+  
+  sing <- sum(results$singular, na.rm=TRUE) # How often was the fit singular? 
+  
+  ret <- data.frame(bias_Int=bias_Int, MAE_Int=MAE_Int, RMSE_Int=RMSE_Int, SE_Int=SE_Int, ETA_Int=ETA_Int, EDR_Int=EDR_Int,
+                    singular=sing, int=int)
+  ret
+}
+```
+
+The summarise function calculates values that I'm interested in for interpretation of the resuls. I calculate a relative bias, the mean absolute error, and Root Mean Square Error. The calculation of these three values is why I had to return the effect size in the analysis function, so they can be compared to the intended value of the interaction effect. Next, I also calculate a mean Standard Error of the coefficient, Empirical Detection Rates, a mean ETA² and a sum of how often singularity occured. Again, this is all put neatly into a data frame that is returned by the function.
+
+## Running the simulation
+
+```{r eval=FALSE}
+# Run the simulation
+results <- runSimulation(Design, replications=1000, verbose=FALSE, parallel=TRUE, ncores=6, generate=Generate, analyse=Analyse, summarise=Summarise, progress=TRUE)
+```
+
+The easiest part of the code, the above runs the simulation.
+
+# Results
+....

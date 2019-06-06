@@ -64,9 +64,7 @@ Analyse <- function(condition, dat, fixed_objects=NULL){
   singular <- isSingular(fit) # Check to see whether the fit is singular
   sig <- Anova(fit) # Significance test
   anova <- ezANOVA(dat, dv=.(DV), wid=.(id), within=.(time), between=.(condition)) # RM ANOVA to calculate eta squared
-  ret <- data.frame(coefficientCond=coef(summary(fit))[2,1], seCond=coef(summary(fit))[2,2], pCond=sig$`Pr(>Chisq)`[1], etaCond=anova$ANOVA$ges[1], 
-                    coefficientTime=coef(summary(fit))[3,1], seTime=coef(summary(fit))[3,2], pTime=sig$`Pr(>Chisq)`[2], etaTime=anova$ANOVA$ges[2],
-                    coefficientInt=coef(summary(fit))[4,1], seInt=coef(summary(fit))[4,2], pInt=sig$`Pr(>Chisq)`[3], etaInt=anova$ANOVA$ges[3],
+  ret <- data.frame(coefficientInt=coef(summary(fit))[4,1], seInt=coef(summary(fit))[4,2], pInt=sig$`Pr(>Chisq)`[3], etaInt=anova$ANOVA$ges[3],
                     singular=as.numeric(singular), effect_Size=as.numeric(effectSize)) # Extract Coefficients, standard errors, significance, and eta squared
   ret
 }
@@ -88,7 +86,7 @@ Summarise <- function(condition, results, fixed_objects = NULL) {
 }
 
 # Run the simulation
-results <- runSimulation(Design, replications=1000, verbose=FALSE, parallel=FALSE, ncores=6, generate=Generate, analyse=Analyse, summarise=Summarise, progress=TRUE)
+results <- runSimulation(Design, replications=1000, verbose=FALSE, parallel=TRUE, ncores=6, generate=Generate, analyse=Analyse, summarise=Summarise, progress=TRUE)
 
 saveRDS(results, "results.rds")
 
