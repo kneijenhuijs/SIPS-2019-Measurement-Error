@@ -3,6 +3,7 @@ library(lme4)
 library(car)
 library(ez)
 library(tidyverse)
+library(parallel)
 
 options(scipen=99)
 
@@ -81,12 +82,17 @@ Summarise <- function(condition, results, fixed_objects = NULL) {
   sing <- sum(results$singular, na.rm=TRUE) # How often was the fit singular? 
   
   ret <- data.frame(bias_Int=bias_Int, MAE_Int=MAE_Int, RMSE_Int=RMSE_Int, SE_Int=SE_Int, ETA_Int=ETA_Int, EDR_Int=EDR_Int,
-                    singular=sing, int=int)
+                    singular=sing)
   ret
 }
 
 # Run the simulation
-results <- runSimulation(Design, replications=1000, verbose=FALSE, parallel=TRUE, ncores=6, generate=Generate, analyse=Analyse, summarise=Summarise, progress=TRUE)
+results <- runSimulation(Design, replications=5000, verbose=FALSE, parallel=TRUE, ncores=5, progress=TRUE, save=TRUE,
+                         packages=c('tidyverse', 'ez', 'lme4', 'car'),
+                         generate=Generate, analyse=Analyse, summarise=Summarise)
+
+
+
 
 saveRDS(results, "results.rds")
 

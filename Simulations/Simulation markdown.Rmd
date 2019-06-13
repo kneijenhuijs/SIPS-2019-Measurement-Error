@@ -125,7 +125,7 @@ Analyse <- function(condition, dat, fixed_objects=NULL){
 }
 ```
 
-The data analysis function is much simplet. I fit a linear mixed-effect model, check whether the fit is singular (happens sometimes, and I'd rather have the information on how often it happened), run a significance test, and run a RM ANOVA to get an ETA². Next, all relevant information (coefficient, SE, p-value, ETA² and singularity) is put into a data frame, which the function returns. I also catch the effect size here, as I need it in my summarise function.
+The data analysis function is much simpler. I fit a linear mixed-effect model, check whether the fit is singular (happens sometimes, and I'd rather have the information on how often it happened), run a significance test, and run a RM ANOVA to get an ETA². Next, all relevant information (coefficient, SE, p-value, ETA² and singularity) is put into a data frame, which the function returns. I also catch the effect size here, as I need it in my summarise function.
 
 ## Summarise
 
@@ -153,10 +153,135 @@ The summarise function calculates values that I'm interested in for interpretati
 
 ```{r eval=FALSE}
 # Run the simulation
-results <- runSimulation(Design, replications=1000, verbose=FALSE, parallel=TRUE, ncores=6, generate=Generate, analyse=Analyse, summarise=Summarise, progress=TRUE)
+results <- runSimulation(Design, replications=5000, verbose=FALSE, parallel=TRUE, ncores=5, progress=TRUE, save=TRUE,
+                         packages=c('tidyverse', 'ez', 'lme4', 'car'),
+                         generate=Generate, analyse=Analyse, summarise=Summarise)
 ```
 
 The easiest part of the code, the above runs the simulation.
 
 # Results
-....
+All the above code was not run during the creation of this markdown file (could you imagine how long it would take, only for me to find a typo or two?), so first we load our relevant libraries and the result data.
+```{r warning=FALSE, message=FALSE, error=FALSE}
+library(here)
+library(ggplot2)
+library(ggthemes)
+library(tidyverse)
+results <- readRDS(here("results.rds"))
+```
+
+## Relative bias
+The relative bias is the bias of the coefficient of interest. The bias is divided by the value of the coefficient used in the data generation. We expect that with more measurement error, this bias becomes larger.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=bias_Int)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9), fill="deepskyblue4") + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3, fill="deepskyblue4") +
+  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+As you can see, our interaction coefficient becomes biased from near zero (with no measurement error) to -0.5 (with 30% and 40% measurement error). A clear and also very predictable result: More measurement error creates more bias in our coefficient. How does this relate to effect size?
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=bias_Int, fill=effectSize)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
+  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+Oh my, very little variance within the violin plots, but we can tell that higher effect sizes seem to show more bias in the interaction coefficient.
+
+## Mean Absolute Error
+The Mean Absolute Error is the average absolute deviation from the coefficient. It is similar to the relative bias, except that it is, well, an absolute measure rather than relative.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=MAE_Int)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9), fill="deepskyblue4") + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3, fill="deepskyblue4") +
+  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+The interaction coefficient becomes biased from near zero (with no measurement error) to over 6 (with 30% and 40% measurement error). Please note, 6 is a lot as our coefficient ranges from 0 to 13! Let's check it out in relation to effect size.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=MAE_Int, fill=effectSize)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
+  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+We can tell that measurement error really seems to have more influence when the effect size is larger. I honestly thought we would see more absolute bias when there was no effect size.
+
+## Mean Standard Error of coefficient
+The Mean Standard Error I am plotting here is literally the mean of the SE that is reported when your perform the Linear Mixed-Model showed in the Analyse function. I don't necessarily expect it to go up, but mostly that the distribution gets more spread out when measurement error goes up.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=SE_Int)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9), fill="deepskyblue4") + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3, fill="deepskyblue4") +
+  labs(color="Mean effect", x="Measurement error", y="SE of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+So it goes up a bit, but mostly shows a broader distribution. The SE is a measure of our uncertainty regarding our coefficient, so that makes sense! Let's check out the relation to effect size.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=SE_Int, fill=effectSize)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
+  labs(color="Mean effect", x="Measurement error", y="SE of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+A higher effect size doesn't necessarily gives a more spread out distribution, but the SE does go up.
+
+## ETA Squared
+ETA Squared is a measure of effect size. We expect the ETA Squared to deviate away from the "expected" ETA Squared given how large the coefficient is. I'm not a 100% sure how large the ETA squared should be given the size of the coefficient, so our 0% measurement error serves as our comparison unit. While the plot including the sizes of the coefficient is more informative, I do want to show the plot without them first.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=ETA_Int)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9), fill="deepskyblue4") + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3, fill="deepskyblue4") +
+  labs(color="Mean effect", x="Measurement error", y="Eta² of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+With 0% measurement error, we see a nice distribution of ETA Squared, which makes sense as this is an aggregate of all the simulations regardless of coefficient size. The more measurement error we add, the further ETA Squared deviates towards zero.
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results, aes(x=measError, y=ETA_Int, fill=effectSize)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
+  labs(color="Mean effect", x="Measurement error", y="Eta² of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  theme_gdocs()
+```
+
+Unfortunately there is very little variance within the violin plots, making this plot hard to read. The sizes of the coefficient go from 0 to 13 from left to right. So we can see that the ETA Squared ranges from 0 to 0.525 when there is 0% measurement error. Every ETA squared drifts further towards zero with more added measurement error.
+
+## Empirical Detection Rates
+
+This is probably my favorite figure to check. The EDR shows how often we get a *p* of .05 when there is no effect. As such, this only plots the condition where there is no effect size. Basically: How likely are Type I errors when measurement error increases?
+
+```{r warning=FALSE, message=FALSE, error=FALSE}
+ggplot(results %>% filter(effectSize==0), aes(x=measError, y=EDR_Int)) + 
+  geom_violin(scale="width", color="black", position = position_dodge(width = 0.9), fill="deepskyblue4") + 
+  geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend=FALSE, width=0.3, fill="deepskyblue4") +
+  labs(color="Mean effect", x="Measurement error", y="EDR of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  geom_hline(yintercept = .075, colour = 'red') + geom_hline(yintercept = .025, colour = 'red') +
+  theme_gdocs()
+```
+
+...
