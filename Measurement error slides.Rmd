@@ -168,7 +168,7 @@ Effect size: 0 / 2\*MCID / 4\*MCID / 6*MCID
 
 Measurement error: 0 / 10% / 20% / 30% / 40%
 
-x replications
+5000 replications per parameter combination
 
 Simulations performed using SimDesign package [@SimDesign].
 
