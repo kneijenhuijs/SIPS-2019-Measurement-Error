@@ -1,10 +1,31 @@
-This file will be used to create a GitHub page once the repository goes public.
+<!-- This file will be used to create a GitHub page once the repository goes public. -->
 
 This page introduces the reasoning behind the unconference on Measurement Error during the meeting of the Society for the Improvement of Psychological Science 2019 in Rotterdam.
 
 Recently, I performed a systematic review on the measurement properties of a few dozen Patient Reported Outcome Measures (PROMs). After data extraction of 314 validation articles, we found a surprising lack of reports on measurement error. A total of 13 validation articles (4.14%) reported on measurement error, of which 9 reported a Standard Error of Measurement, 3 reported Limits of Agreement, and 2 reported Person Standard Error. For a total of 12 validation articles (3.82%) we could calculate Standard Error of Measurement and Smallest Detectable Change. As such, only 25 (7.96%) of all articles reported data relevant to Measurement Error.
 
 Measurement Error represents the minimum amount of change measured by a measurement tool, of which we can be sure is not an artifact of systematic error. The amount of Measurement Error is ideally smaller than the Minimal Clinically Important Difference, which represents the minimum amount of change measured by a measurement tool, which is judged to be represent a clinically meaningful change for the patient. We want the Measurement Error to be smaller, so that we can be sure that when we measure a clinically meaningful change, it is not an error.
+
+There are some formulas to cover. To calculate the SDC, we need two measurements of the instrument where the outcome should have been stable. So we need to start with a reliability testing set-up. The formula for the SDC is related to the formula for the Intraclass Correlation Coefficient:
+
+$$Reliability = {\sigma^2 participants \over \sigma² participants + \sigma² error}$$
+First, we need the Standard Error of Measurement (SEM), which is the root of the error term in the formula of reliability:
+
+$$Standard\, Error\, of\, Measurement = \sqrt {\sigma² error}$$
+
+In practice, we calculate the SEM as follows:
+
+$$Standard\, Error\, of\, Measurement = SD * \sqrt {1-ICC}$$
+
+Then the Smallest Detectable Change (SDC) is calculated by taking the outer 5% of the distribution of the SEM:
+
+$$Smallest\, Detectable\, Change = 1.96 * \sqrt {2} * SEM$$
+
+This formula can also be specified as:
+
+$$Smallest\, Detectable\, Change = 1.96 * SD_{change}$$
+
+This last formula is equal to the Limits of Agreement, on which the Bland-Altman method is derived. I won't go into detail on this method in this text. A nice write-up of this method can be found ![here](https://doi.org/10.1093/bja/aem214) [@Myles2007].
 
 Given the above definition, it is clear that Measurement Error has large implications for both clinical practice (e.g. “did the patient improve / deteriorate over time?”) as well as research settings (e.g. “is the change caused by our intervention large enough to warrant implementation?”). To illustrate the latter, I drafted a simulation to represent a research setting close to my own field.
 
