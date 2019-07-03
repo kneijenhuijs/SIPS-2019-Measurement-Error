@@ -9,12 +9,6 @@ output:
 bibliography: EM.bib
 ---
 
-<style>
-slides > .backdrop {
-  background: white;
-}
-</style>
-
 ## Who we are
 <div class="columns-2">
 ![](Pictures/Koen2.jpg)
@@ -215,7 +209,7 @@ ggplot(results, aes(x=measError, y=bias_Int)) +
 
 ## Simulation results
 
-```{r warning=FALSE, message=FALSE, error=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, error=FALSE}
 ggplot(results, aes(x=measError, y=ETA_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
