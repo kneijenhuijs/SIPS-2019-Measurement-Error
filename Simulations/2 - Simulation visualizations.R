@@ -81,8 +81,9 @@ ggplot(results, aes(x=measError, y=SE_Int)) +
 ggplot(results, aes(x=measError, y=SE_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
-  labs(color="Mean effect", x="Measurement error", y="SE of Interaction") + 
-  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  labs(x="Measurement error", y="SE of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) +
+  scale_fill_viridis_d(name = "Effect size", labels = c("0 * MCID", "1 * MCID", "2 * MCID", "3 * MCID"))
   theme_gdocs()
 
 # Violin EDR

@@ -30,7 +30,7 @@ This last formula is equal to the Limits of Agreement, on which the Bland-Altman
 Given the above definition, it is clear that Measurement Error has large implications for both clinical practice (e.g. “did the patient improve / deteriorate over time?”) as well as research settings (e.g. “is the change caused by our intervention large enough to warrant implementation?”). To illustrate the latter, I drafted a simulation to represent a research setting close to my own field.
 
 # Simulation justification
-I am simulation a RCT for the treatment of depression, with depression being measured by the BDI-II. Why the BDI-II? Because I could find some nifty statistics on it to make the simulation more rooted in reality.
+I am simulating a RCT for the treatment of depression, with depression being measured by the BDI-II. Why the BDI-II? Because I could find some nifty statistics on it to make the simulation more rooted in reality.
 
 The BDI-II has a range of 0 - 63, which can be categorized into four categories:
     
@@ -183,6 +183,7 @@ The easiest part of the code, the above runs the simulation.
 
 # Results
 All the above code was not run during the creation of this markdown file (could you imagine how long it would take, only for me to find a typo or two?), so first we load our relevant libraries and the result data.
+
 ```{r warning=FALSE, message=FALSE, error=FALSE}
 library(here)
 library(ggplot2)
@@ -209,8 +210,9 @@ As you can see, our interaction coefficient becomes biased from near zero (with 
 ggplot(results, aes(x=measError, y=bias_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
-  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
+  labs(x="Measurement error", y="Bias of Interaction") + 
   scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  scale_fill_viridis_d(name = "Effect size", labels = c("0 * MCID", "1 * MCID", "2 * MCID", "3 * MCID")) +
   theme_gdocs()
 ```
 
@@ -234,8 +236,9 @@ The interaction coefficient becomes biased from near zero (with no measurement e
 ggplot(results, aes(x=measError, y=MAE_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
-  labs(color="Mean effect", x="Measurement error", y="Bias of Interaction") + 
-  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  labs(x="Measurement error", y="Bias of Interaction") + 
+  scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) +
+  scale_fill_viridis_d(name = "Effect size", labels = c("0 * MCID", "1 * MCID", "2 * MCID", "3 * MCID")) +
   theme_gdocs()
 ```
 
@@ -259,8 +262,9 @@ So it goes up a bit, but mostly shows a broader distribution. The SE is a measur
 ggplot(results, aes(x=measError, y=SE_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
-  labs(color="Mean effect", x="Measurement error", y="SE of Interaction") + 
+  labs(x="Measurement error", y="SE of Interaction") + 
   scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  scale_fill_viridis_d(name = "Effect size", labels = c("0 * MCID", "1 * MCID", "2 * MCID", "3 * MCID")) +
   theme_gdocs()
 ```
 
@@ -284,8 +288,9 @@ With 0% measurement error, we see a nice distribution of ETA Squared, which make
 ggplot(results, aes(x=measError, y=ETA_Int, fill=effectSize)) + 
   geom_violin(scale="width", color="black", position = position_dodge(width = 0.9)) + 
   geom_boxplot(color="black", position = position_dodge(width = 0.9), show.legend = FALSE, width=0.3) +
-  labs(color="Mean effect", x="Measurement error", y="Eta² of Interaction") + 
+  labs(x="Measurement error", y="Eta² of Interaction") + 
   scale_x_discrete(labels=c("0%", "10%", "20%", "30%", "40%")) + 
+  scale_fill_viridis_d(name = "Effect size", labels = c("0 * MCID", "1 * MCID", "2 * MCID", "3 * MCID")) +
   theme_gdocs()
 ```
 
@@ -305,4 +310,19 @@ ggplot(results %>% filter(effectSize==0), aes(x=measError, y=EDR_Int)) +
   theme_gdocs()
 ```
 
-...
+My response to this figure was "huh", as there is no very obvious trend with an increase in measurement error.
+
+## Simulation limitations
+I need to point out some limitations to the simulation in its' current form. All of the limitations are related to how the data is generated.
+
+1. A lot of parameters in the data generation are super-arbitrary. In particular, the calculation of the variance-covariance matrix for generation of the measurement error has multiple parameters that can be improved upon. The inta-individual correlation can be improved by finding any justification for a certain value. Whule the variance of the measurement error has some justification, it is all based on personal logic, instead of literature. The parameters in the variance-covariance matrix for generation of the random effects are equally (if not more) arbitrary.
+
+2. The analysis of the data sets based on zero measurement error result in a lot of singular models (i.e. models where the random effects are close to zero). This might actually be the explanation for why I found no trend in Empirical Detection Rates. I tried adding some more random error to the data generation, but this created an unreasonably high amount of data points that equal zero on the BDI-II, which is not realistic.
+
+3. On the subject of error, the data generation definitely needs some as random effects and measurement error are definitely not the only sources of error in data. Like I stated, I tried adding some more random error to the data generation, but this created an unreasonably high amount of data points that equal zero on the BDI-II, which is not realistic.
+
+If anybody have any suggestions for fixing these limitations, please contact me!
+
+# Conclusion
+
+I hope this document was helpful! After the unconference, I will be adding the results of the discussion.
