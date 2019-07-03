@@ -271,17 +271,36 @@ Random measurement error: Unpredictable fluctuations in measurement
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 </font>
 
-## Ideas for questions
+## How to measure measurement measurement error in experimental psychology
 
-- How to measure measurement error in experimental psychology?
-- Would it be feasible to set up studies to investigate the measurement error of your measurement tools in your field?
-- The way we calculate measurement error is always based on change scores (SDC & LoA). How limiting is this in its' application?
-Are the limitations to how we investigate measurement error (SDC & LoA) detrimental to our understanding?
-- How can we incorporate measurement error into our data-analyses?
+**Sam, can you fill this slide in?**
 
-## Ideas for statements
+## Devil's advocate
 
-- Measurement error is unmeasurable, and therefore only theoretically relevant
+Measurement error is unmeasurable, and therefore only theoretically relevant
+
+## Is it feasible to run dedicated studies to investigate measurement error?
+
+How about in your specific field?
+
+## The use of SDC and LoA is limited
+
+We calculate measurement error is always based on change scores (SDC & LoA), while measurement error is theoretically tied to a single measurement.
+
+How limiting is this in its' application?
+
+Are there possibilities of improving upon these methods?
+
+## Measurement error and the reproducibility crisis
+
+Measurement error may bias our findings. Can it be related to the reproducibility crisis?
+
+*Doesn't measurement error inflate both the original and the reproduction?*
+
+## Options for incorporating measurement error into our data-analyses
+
+...
+
 
 ## References
 
