@@ -18,6 +18,21 @@ Koen Neijenhuijs
 \@KNeijenhuijs
 
 k.i.neijenhuijs@vu.nl
+
+</div>
+
+<br>
+
+<div class="columns-2">
+![](pictures/Sam2.jpg)
+<br>
+
+Sam Parsons
+
+\@sam_d_parsons
+
+sam.parsons@psy.ox.ac.uk
+
 </div>
 
 ## Measurement Error {.build}
@@ -60,6 +75,19 @@ Systematic measurement error: inaccuracies inherent to the measurement tool
 Random measurement error: Unpredictable fluctuations in measurement
 
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
+
+## error, and therefore reliability, are sample dependant
+
+No, you cannot rely on other studies
+
+<br>
+
+No, you cant rely on test manuals / validation studies for estimates
+
+<br>
+
+Yes, you should assess error in each sample
+
 
 ## Determining Measurement Error?
 We don't know the true value, so can't calculate...
@@ -237,7 +265,7 @@ But first, let's take some time for an open discussion
 ## Is measurement error prevalent in your studies?
 
 <br>
-<br>
+Is error/reliability reported enough to tell? 
 <br>
 <br>
 <br>
@@ -271,13 +299,70 @@ Random measurement error: Unpredictable fluctuations in measurement
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 </font>
 
-## How to measure measurement measurement error in experimental psychology
+## How to measure measurement error in experimental psychology {.build}
 
-**Sam, can you fill this slide in?**
+Are our **tasks** reliable?
+
+<div class="centered">
+![](gifs/dunno.gif)
+</div>
+
+## The reliability paradox {.build}
+
+@hedge_reliability_2018 Why robust cognitive tasks do not produce reliable individual differences 
+
+<br>
+<br>
+
+For a further and saddening view, see @rouder_why_2019 "Why most studies of individual differences with inhibition tasks are bound to fail"
+
+even modelling trial-level variability will not fully-recover true effects - never underestimate the power of error
+
+## "normal" reliability indices dont work for tasks
+
+Difference scores make this difficult for internal consistency measures
+
+Cronbach's alpha (also omega) are likely unsuitable
+
+(Shameless self-promotion) @Parsons2019 offer suggestions, examples, and code to estimate and report reliability of task measures. 
+
+(second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
+
+## splithalf
+
+```{r echo = TRUE, eval = FALSE}
+splithalf(data = Hedge_raw,
+          outcome = "RT",
+          score = "difference",
+          var.trialnum = "Trial",
+          var.condition = "time",
+          conditionlist = c(1, 2),
+          var.compare = "Condition",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          var.participant = "ppid",
+          var.RT = "Reactiontime" )
+```
+
+<div class="centered">
+![](pictures/stroop.png)
+</div>
+
+## Flexibility in data processing {.build}
+
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+
+knitr::include_graphics("pictures/dpt1.png")
+
+```
+
 
 ## Devil's advocate
 
 Measurement error is unmeasurable, and therefore only theoretically relevant
+
+Reliability is a problem with individual differences questions - we use experimental tasks, so we're fine?
 
 ## Is it feasible to run dedicated studies to investigate measurement error?
 
