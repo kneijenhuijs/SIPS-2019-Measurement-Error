@@ -1,4 +1,11 @@
-<!-- This file will be used to create a GitHub page once the repository goes public. -->
+---
+title: "Measurement Error in Psychological Science"
+author: "Koen Neijenhuijs"
+date: "July 4, 2019"
+output: html_document
+---
+
+# Introduction
 
 This page introduces the reasoning behind the unconference on Measurement Error during the meeting of the Society for the Improvement of Psychological Science 2019 in Rotterdam.
 
@@ -29,7 +36,7 @@ This last formula is equal to the Limits of Agreement, on which the Bland-Altman
 
 Given the above definition, it is clear that Measurement Error has large implications for both clinical practice (e.g. “did the patient improve / deteriorate over time?”) as well as research settings (e.g. “is the change caused by our intervention large enough to warrant implementation?”). To illustrate the latter, I drafted a simulation to represent a research setting close to my own field.
 
-# Simulation justification
+## Simulation justification
 I am simulating a RCT for the treatment of depression, with depression being measured by the BDI-II. Why the BDI-II? Because I could find some nifty statistics on it to make the simulation more rooted in reality.
 
 The BDI-II has a range of 0 - 63, which can be categorized into four categories:
@@ -47,10 +54,10 @@ We are assuming that our treatment group has a further decrease in depression. B
 
 Measurement error was added based on a percentage of the range of the BDI-II. In my experience (and that of some colleague psychometricians I asked, #AnecdotalEvidence) a Smallest Detectable Change representing 20% of the range of the measurement instrument is a regular finding. As such, I decided to use measurement error ranging from 0% up to 40%.
 
-# Code explanation
+## Code explanation
 I'm going to walk through the code step by step. I am using the SimDesign package [@SimDesign] to simplify the steps. The steps consist of data generation, data analysis, and summarizing the results.
 
-## Data generation
+### Data generation
 The first step is defining the design:
 
 ```{r eval=FALSE}
@@ -61,7 +68,7 @@ Design <- expand.grid(sampleSize = c(250, 500, 750),
 
 These are the parameters I discussed previously. The effect size is based on a multiplication of the MCID (4.338), while the measurement error is based on a percentage of the range. Furthermore, I wanted to check the influence of sample size. I actually also wanted to include small sample sizes (< 100), but I couldn't get the models based on that data generation to converge in the analysis phase.
 
-![](gifs/shrug.gif)
+<center> ![](shrug.gif) </center>
 
 I'm going to go step by step through the data generation function.
 
@@ -130,7 +137,7 @@ I create a data frame representing the two measurements, merge it with the data 
 
 Lastly, I truncate any values that went below 0 or above 63 (even though scores above 63 should be nigh impossible, best be sure). The function then returns the generated data frame.
 
-## Data analysis
+### Data analysis
 
 ```{r eval=FALSE}
 # Function for analysing the data set
@@ -148,7 +155,7 @@ Analyse <- function(condition, dat, fixed_objects=NULL){
 
 The data analysis function is much simpler. I fit a linear mixed-effect model, check whether the fit is singular (happens sometimes, and I'd rather have the information on how often it happened), run a significance test, and run a RM ANOVA to get an ETA². Next, all relevant information (coefficient, SE, p-value, ETA² and singularity) is put into a data frame, which the function returns. I also catch the effect size here, as I need it in my summarise function.
 
-## Summarise
+### Summarise
 
 ```{r eval=FALSE}
 # Function that summarises the analysis results into useful statistics for examining which of the data sets showed less bias
@@ -170,7 +177,7 @@ Summarise <- function(condition, results, fixed_objects = NULL) {
 
 The summarise function calculates values that I'm interested in for interpretation of the resuls. I calculate a relative bias, the mean absolute error, and Root Mean Square Error. The calculation of these three values is why I had to return the effect size in the analysis function, so they can be compared to the intended value of the interaction effect. Next, I also calculate a mean Standard Error of the coefficient, Empirical Detection Rates, a mean ETA² and a sum of how often singularity occured. Again, this is all put neatly into a data frame that is returned by the function.
 
-## Running the simulation
+### Running the simulation
 
 ```{r eval=FALSE}
 # Run the simulation
@@ -181,7 +188,7 @@ results <- runSimulation(Design, replications=5000, verbose=FALSE, parallel=TRUE
 
 The easiest part of the code, the above runs the simulation.
 
-# Results
+## Results
 All the above code was not run during the creation of this markdown file (could you imagine how long it would take, only for me to find a typo or two?), so first we load our relevant libraries and the result data.
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -192,7 +199,7 @@ library(tidyverse)
 results <- readRDS(here("results.rds"))
 ```
 
-## Relative bias
+### Relative bias
 The relative bias is the bias of the coefficient of interest. The bias is divided by the value of the coefficient used in the data generation. We expect that with more measurement error, this bias becomes larger.
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -218,7 +225,7 @@ ggplot(results, aes(x=measError, y=bias_Int, fill=effectSize)) +
 
 Oh my, very little variance within the violin plots, but we can tell that higher effect sizes seem to show more bias in the interaction coefficient.
 
-## Mean Absolute Error
+### Mean Absolute Error
 The Mean Absolute Error is the average absolute deviation from the coefficient. It is similar to the relative bias, except that it is, well, an absolute measure rather than relative.
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -244,7 +251,7 @@ ggplot(results, aes(x=measError, y=MAE_Int, fill=effectSize)) +
 
 We can tell that measurement error really seems to have more influence when the effect size is larger. I honestly thought we would see more absolute bias when there was no effect size.
 
-## Mean Standard Error of coefficient
+### Mean Standard Error of coefficient
 The Mean Standard Error I am plotting here is literally the mean of the SE that is reported when your perform the Linear Mixed-Model showed in the Analyse function. I don't necessarily expect it to go up, but mostly that the distribution gets more spread out when measurement error goes up.
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -270,7 +277,7 @@ ggplot(results, aes(x=measError, y=SE_Int, fill=effectSize)) +
 
 A higher effect size doesn't necessarily gives a more spread out distribution, but the SE does go up.
 
-## ETA Squared
+### ETA Squared
 ETA Squared is a measure of effect size. We expect the ETA Squared to deviate away from the "expected" ETA Squared given how large the coefficient is. I'm not a 100% sure how large the ETA squared should be given the size of the coefficient, so our 0% measurement error serves as our comparison unit. While the plot including the sizes of the coefficient is more informative, I do want to show the plot without them first.
 
 ```{r warning=FALSE, message=FALSE, error=FALSE}
@@ -296,7 +303,7 @@ ggplot(results, aes(x=measError, y=ETA_Int, fill=effectSize)) +
 
 Unfortunately there is very little variance within the violin plots, making this plot hard to read. The sizes of the coefficient go from 0 to 13 from left to right. So we can see that the ETA Squared ranges from 0 to 0.525 when there is 0% measurement error. Every ETA squared drifts further towards zero with more added measurement error.
 
-## Empirical Detection Rates
+### Empirical Detection Rates
 
 This is probably my favorite figure to check. The EDR shows how often we get a *p* of .05 when there is no effect. As such, this only plots the condition where there is no effect size. Basically: How likely are Type I errors when measurement error increases?
 
@@ -312,7 +319,7 @@ ggplot(results %>% filter(effectSize==0), aes(x=measError, y=EDR_Int)) +
 
 My response to this figure was "huh", as there is no very obvious trend with an increase in measurement error.
 
-## Simulation limitations
+### Simulation limitations
 I need to point out some limitations to the simulation in its' current form. All of the limitations are related to how the data is generated.
 
 1. A lot of parameters in the data generation are super-arbitrary. In particular, the calculation of the variance-covariance matrix for generation of the measurement error has multiple parameters that can be improved upon. The inta-individual correlation can be improved by finding any justification for a certain value. Whule the variance of the measurement error has some justification, it is all based on personal logic, instead of literature. The parameters in the variance-covariance matrix for generation of the random effects are equally (if not more) arbitrary.
@@ -323,6 +330,6 @@ I need to point out some limitations to the simulation in its' current form. All
 
 If anybody have any suggestions for fixing these limitations, please contact me!
 
-# Conclusion
+## Conclusion
 
 I hope this document was helpful! After the unconference, I will be adding the results of the discussion.
