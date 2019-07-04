@@ -328,7 +328,7 @@ Cronbach's alpha (also omega) are likely unsuitable
 
 (second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
 
-## splithalf
+## Splithalf
 
 ```{r echo = TRUE, eval = FALSE}
 splithalf(data = Hedge_raw,
@@ -382,11 +382,34 @@ Measurement error may bias our findings. Can it be related to the reproducibilit
 
 *Doesn't measurement error inflate both the original and the reproduction?*
 
-## Options for incorporating measurement error into our data-analyses
+## Incorporating measurement error into our data-analyses
 
-...
+Accuracy benchmarks / *Uninformed* comparators
+
+E.g. Does a random estimator outperform sample means in accuracy?
+Using Mean Squared Error [@Davis-Stober2018] (very good read!)
+
+*"We consider the sample means to be minimally accurate if they are more accurate than random estimators that scramble the relations among conditions"*
+
+*"Whether the random estimator incurs less Mean Square Error than sample means depends upon the environment, i.e., sample size and effect size"*
+
+## Accuracy benchmark example
+<font size="3">
+*"The sample means for this set of data are equal to: y1 = 593 ms, y2 = 626 ms, y3 = 630 ms, and y4 = 756 ms, for Conditions 1-4 respectively. We refer to this pattern of means as the observed pattern of treatment effects. Now, let’s consider what the random estimator would yield as estimates of the population means for these data. First, we draw four uniform random numbers from the [−1, 1] interval that correspond to the four conditions. For Condition 1, we obtain -.190, for Condition 2, we obtain -.973, for Condition 3, we obtain.823, and for Condition 4 we obtain .600. Note that once a random number has been drawn for a condition, we cannot shuffle or re-assign it to another condition after the fact. We calculate the scale factor of b as 21.5, which portends quite a bit of shrinkage. Using this value, the random estimates are: mre1 = 647 ms, mre2 = 630 ms, mre3 = 669 ms, mre4 = 664 ms. Note that all four estimates are close to the grand mean. Recall that the order of the sample means was: Condition 1 < Condition 2 < Condition 3 < Condition 4. In contrast, the random estimator now assigns the order: Condition 2 < Condition 1 < Condition 4 < Condition 3. This is the same random order that was produced by the random ai draws. Note also that the relative distance between the random estimates has also been randomized; the estimates for Conditions 3 and 4 are quite close, in contrast to the sample means, where y4 is relatively farther from y3."*
+
+</font size>
+
+## Incorporating measurement error into our data-analyses
+
+So we may find out our sample means are inaccurate (i.e. too much measurement error)...
+
+What now?
+
+<div class="centered">
+![](gifs/dunno.gif)
+</div>
 
 
 ## References
 
-<font size="3">
+<font size="2.5">
