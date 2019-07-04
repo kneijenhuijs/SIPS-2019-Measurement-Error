@@ -409,6 +409,11 @@ What now?
 ![](gifs/dunno.gif)
 </div>
 
+## Incorporating measurement error into our data-analyses
+
+For many analyses (e.g. mixed-effect models, Bayesian estimators) it is already advised (unfortunately not yet common) practice to report the ICC
+
+As measurement error is a reflection of the ICC, is there a way to directly incorporate the ICC into the analysis itself?
 
 ## References
 
