@@ -200,7 +200,7 @@ Measurement error: 0 / 10% / 20% / 30% / 40%
 
 Simulations performed using SimDesign package [@SimDesign].
 
-Code can be found on my Github: URL here.
+Code can be found on my Github: [https://github.com/kneijenhuijs/SIPS-2019-Measurement-Error](https://github.com/kneijenhuijs/SIPS-2019-Measurement-Error)
 
 ## Simulation results
 
@@ -252,7 +252,7 @@ ggplot(results, aes(x=measError, y=ETA_Int, fill=effectSize)) +
 
 For a more thorough write-up of the simulations, see the Github page for this unconference:
 
-**URL HERE**
+[https://kneijenhuijs.github.io/SIPS-2019-Measurement-Error/](https://kneijenhuijs.github.io/SIPS-2019-Measurement-Error/)
 
 ## That's enough of us talking
 
