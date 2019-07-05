@@ -122,9 +122,9 @@ Note that we are using a z-distribution (1.96):
 </div>
 
 ## SDC and reliability
-SDC can be calculated from ICC
+SDC can be calculated from Intraclass Correlation Coefficients (ICC)
 
-"Reliability is "the degree to which the measurement is free from measurement error" [@Mokkink2010a]
+Reliability is "the degree to which the measurement is free from measurement error" [@Mokkink2010a]
 
 ## Limits of Agreement
 SDC is not the only value of measurement error
@@ -254,6 +254,93 @@ For a more thorough write-up of the simulations, see the Github page for this un
 
 [https://kneijenhuijs.github.io/SIPS-2019-Measurement-Error/](https://kneijenhuijs.github.io/SIPS-2019-Measurement-Error/)
 
+## Measurement error in experimental psychology {.build}
+
+Are our **tasks** reliable?
+
+<div class="centered">
+![](gifs/dunno.gif)
+</div>
+
+## The reliability paradox {.build}
+
+@hedge_reliability_2018 Why robust cognitive tasks do not produce reliable individual differences 
+
+<div class="centered">
+![](gifs/stroopgif.gif)
+</div>
+
+<br>
+
+e.g. everybody shows the stroop effect. Yet, the measure often shows poor psychometric properties
+
+## "normal" reliability indices dont work for tasks
+
+Difference scores make this difficult for internal consistency measures
+
+Cronbach's alpha (also omega) are likely unsuitable
+
+(Shameless self-promotion) @Parsons2019 offer suggestions, examples, and code to estimate and report reliability of task measures. 
+
+(second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
+
+## Splithalf
+
+```{r echo = TRUE, eval = FALSE}
+splithalf(data = Hedge_raw,
+          outcome = "RT",
+          score = "difference",
+          permutations = 5000,
+          var.trialnum = "Trial",
+          var.condition = "time",
+          conditionlist = c(1, 2),
+          var.compare = "Condition",
+          compare1 = "congruent",
+          compare2 = "incongruent",
+          var.participant = "ppid",
+          var.RT = "Reactiontime" )
+```
+
+<div class="centered">
+![](pictures/stroop.png)
+</div>
+
+## What about mixed-effect models?
+
+Mixed-effect models can:
+
+- Model the **random variance** inherent to participants across multiple measures
+- Model the **random variance** inherent to stimuli across multiple measures
+- Model the **random variance** inherent to *pretty much anything* across multiple measures
+
+<font size="3">
+Systematic measurement error: inaccuracies inherent to the measurement tool
+
+*E.g. Miscalibrated computer for reaction time*
+
+Random measurement error: Unpredictable fluctuations in measurement
+
+*E.g. During reaction time measurement, a participant may be distracted on some trials*
+</font>
+
+
+## What about mixed-effect models?
+
+For a further and saddening view, see @rouder_why_2019 "Why most studies of individual differences with inhibition tasks are bound to fail"
+
+even modelling trial-level variability will not fully-recover true effects - never underestimate the power of error
+
+## Flexibility in data processing {.build}
+
+
+```{r out.width='80%', echo = FALSE, fig.align='center'}
+
+knitr::include_graphics("pictures/dpt1.png")
+
+```
+
+
+
 ## That's enough of us talking
 
 The rest of all slides are of questions and statements for the room to discuss
@@ -280,82 +367,6 @@ Random measurement error: Unpredictable fluctuations in measurement
 
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 </font>
-
-## What about mixed-effect models?
-
-Mixed-effect models can:
-
-- Model the **random variance** inherent to participants across multiple measures
-- Model the **random variance** inherent to stimuli across multiple measures
-- Model the **random variance** inherent to *pretty much anything* across multiple measures
-
-<font size="3">
-Systematic measurement error: inaccuracies inherent to the measurement tool
-
-*E.g. Miscalibrated computer for reaction time*
-
-Random measurement error: Unpredictable fluctuations in measurement
-
-*E.g. During reaction time measurement, a participant may be distracted on some trials*
-</font>
-
-## How to measure measurement error in experimental psychology {.build}
-
-Are our **tasks** reliable?
-
-<div class="centered">
-![](gifs/dunno.gif)
-</div>
-
-## The reliability paradox {.build}
-
-@hedge_reliability_2018 Why robust cognitive tasks do not produce reliable individual differences 
-
-<br>
-<br>
-
-For a further and saddening view, see @rouder_why_2019 "Why most studies of individual differences with inhibition tasks are bound to fail"
-
-even modelling trial-level variability will not fully-recover true effects - never underestimate the power of error
-
-## "normal" reliability indices dont work for tasks
-
-Difference scores make this difficult for internal consistency measures
-
-Cronbach's alpha (also omega) are likely unsuitable
-
-(Shameless self-promotion) @Parsons2019 offer suggestions, examples, and code to estimate and report reliability of task measures. 
-
-(second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
-
-## Splithalf
-
-```{r echo = TRUE, eval = FALSE}
-splithalf(data = Hedge_raw,
-          outcome = "RT",
-          score = "difference",
-          var.trialnum = "Trial",
-          var.condition = "time",
-          conditionlist = c(1, 2),
-          var.compare = "Condition",
-          compare1 = "congruent",
-          compare2 = "incongruent",
-          var.participant = "ppid",
-          var.RT = "Reactiontime" )
-```
-
-<div class="centered">
-![](pictures/stroop.png)
-</div>
-
-## Flexibility in data processing {.build}
-
-
-```{r out.width='80%', echo = FALSE, fig.align='center'}
-
-knitr::include_graphics("pictures/dpt1.png")
-
-```
 
 
 ## Devil's advocate
