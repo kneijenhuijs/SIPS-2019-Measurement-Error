@@ -6,7 +6,7 @@ output:
   ioslides_presentation:
     logo: Pictures/logo2.png
     transition: faster
-bibliography: EM.bib
+bibliography: [EM.bib, packages.bib]
 ---
 
 ## Who we are
@@ -76,7 +76,7 @@ Random measurement error: Unpredictable fluctuations in measurement
 
 *E.g. During reaction time measurement, a participant may be distracted on some trials*
 
-## error, and therefore reliability, are sample dependant
+## Error, and therefore reliability, are sample dependant
 
 No, you cannot rely on other studies
 
@@ -274,7 +274,7 @@ Are our **tasks** reliable?
 
 e.g. everybody shows the stroop effect. Yet, the measure often shows poor psychometric properties
 
-## "normal" reliability indices dont work for tasks
+## "Normal" reliability indices dont work for tasks
 
 Difference scores make this difficult for internal consistency measures
 
@@ -282,7 +282,7 @@ Cronbach's alpha (also omega) are likely unsuitable
 
 (Shameless self-promotion) @Parsons2019 offer suggestions, examples, and code to estimate and report reliability of task measures. 
 
-(second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
+(Second shameless self-promotion) the R package splithalf performs permutation-based splithalf estimates of reliability
 
 ## Splithalf
 
