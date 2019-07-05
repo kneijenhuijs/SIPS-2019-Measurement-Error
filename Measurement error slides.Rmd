@@ -1,7 +1,7 @@
 ---
 title: "Measurement error in psychological science"
 author: "Koen Neijenhuijs & Sam Parsons"
-date: "July .., 2019"
+date: "July 7th, 2019"
 output: 
   ioslides_presentation:
     logo: Pictures/logo2.png
