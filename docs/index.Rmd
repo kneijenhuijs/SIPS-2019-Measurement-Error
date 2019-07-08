@@ -18,7 +18,7 @@ write.bib(packages, "packages.bib")
 
 # Introduction
 
-This page introduces the reasoning behind the unconference on Measurement Error during the meeting of the Society for the Improvement of Psychological Science 2019 in Rotterdam.
+This page introduces the reasoning behind the unconference on Measurement Error during the meeting of the Society for the Improvement of Psychological Science 2019 in Rotterdam. The slides of the unconference can be found [here](https://kneijenhuijs.github.io/SIPS-2019-Measurement-Error/Measurement_error_slides.html).
 
 Recently, I performed a systematic review on the measurement properties of a few dozen Patient Reported Outcome Measures (PROMs). After data extraction of 314 validation articles, we found a surprising lack of reports on measurement error. A total of 13 validation articles (4.14%) reported on measurement error, of which 9 reported a Standard Error of Measurement, 3 reported Limits of Agreement, and 2 reported Person Standard Error. For a total of 12 validation articles (3.82%) we could calculate Standard Error of Measurement and Smallest Detectable Change. As such, only 25 (7.96%) of all articles reported data relevant to Measurement Error.
 
